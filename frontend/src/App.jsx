@@ -1,85 +1,58 @@
-// src/App.jsx
-import { useState } from "react";
-import UserForm from "./components/UserForm";
-import AdminDashboard from "./components/AdminDashboard";
-import MessageForm from "./components/MessageForm";
-import "./App.css";
-
-const TABS = [
-  { id: "register", label: "Register User", icon: "⊕" },
-  { id: "dashboard", label: "Dashboard", icon: "⊞" },
-  { id: "compose", label: "Compose Email", icon: "✉" },
-];
+import { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import { Menu } from 'lucide-react';
+import Sidebar from './components/Sidebar';
+import Dashboard from './pages/Dashboard';
+import Contacts from './pages/Contacts';
+import Compose from './pages/Compose';
+import MailLogs from './pages/MailLogs';
+import Templates from './pages/Templates';
+import Settings from './pages/Settings';
+import Subscribe from './pages/Subscribe';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState("register");
-  const [selectedUsers, setSelectedUsers] = useState([]);
-  const [sendToAll, setSendToAll] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0);
-
-  const handleUserAdded = () => {
-    setRefreshKey((k) => k + 1);
-    setTimeout(() => setActiveTab("dashboard"), 1200);
-  };
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="app">
-      { }
-      <aside className="sidebar">
-        <div className="sidebar-brand">
-          <div className="brand-mark">M</div>
-          <div>
-            <div className="brand-name">MailerApp</div>
-            <div className="brand-sub">Email Campaign</div>
-          </div>
-        </div>
+    <>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: 'var(--card-bg)',
+            color: 'var(--text)',
+            border: '1px solid var(--border)',
+            fontFamily: 'var(--font-body)',
+          },
+          success: { iconTheme: { primary: '#2ed573', secondary: '#0a0a0f' } },
+          error: { iconTheme: { primary: '#ff4757', secondary: '#0a0a0f' } },
+        }}
+      />
+      <Routes>
+        {/* Public subscribe page */}
+        <Route path="/subscribe" element={<Subscribe />} />
 
-        <nav className="sidebar-nav">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              className={`nav-item ${activeTab === tab.id ? "active" : ""}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              <span className="nav-icon">{tab.icon}</span>
-              <span>{tab.label}</span>
-              {tab.id === "compose" && selectedUsers.length > 0 && !sendToAll && (
-                <span className="nav-badge">{selectedUsers.length}</span>
-              )}
+        {/* Admin layout */}
+        <Route path="/*" element={
+          <div className="app-layout">
+            <button className="hamburger" onClick={() => setSidebarOpen(true)}>
+              <Menu size={20} color="var(--text)" />
             </button>
-          ))}
-        </nav>
-
-        <div className="sidebar-footer">
-          <div className="sidebar-tip">
-            <span>💡</span>
-            <span>Select users in Dashboard, then switch to Compose Email.</span>
+            <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+            <main className="main-content">
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/contacts" element={<Contacts />} />
+                <Route path="/compose" element={<Compose />} />
+                <Route path="/logs" element={<MailLogs />} />
+                <Route path="/templates" element={<Templates />} />
+                <Route path="/settings" element={<Settings />} />
+              </Routes>
+            </main>
           </div>
-        </div>
-      </aside>
-
-      {/* ── Main Content ─────────── */}
-      <main className="main">
-        <div className="main-inner">
-          {activeTab === "register" && (
-            <UserForm onUserAdded={handleUserAdded} />
-          )}
-          {activeTab === "dashboard" && (
-            <AdminDashboard
-              refreshKey={refreshKey}
-              selectedUsers={selectedUsers}
-              onSelectUsers={setSelectedUsers}
-            />
-          )}
-          {activeTab === "compose" && (
-            <MessageForm
-              selectedUsers={selectedUsers}
-              sendToAll={sendToAll}
-              onSendToAllChange={setSendToAll}
-            />
-          )}
-        </div>
-      </main>
-    </div>
+        } />
+      </Routes>
+    </>
   );
 }
