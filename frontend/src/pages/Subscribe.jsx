@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react';
-import { Image, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 // This can be customised via the campaign/settings image upload
@@ -17,6 +16,8 @@ export default function Subscribe() {
   };
 
   if (status === 'success') return (
+    
+   
     <div style={{ minHeight: '100vh', background: 'var(--cream)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font)', padding: 24 }}>
       <div style={{ textAlign: 'center', maxWidth: 380 }}>
         <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#dcfce7', border: '2px solid #86efac', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', fontSize: '1.4rem' }}>✓</div>
@@ -66,5 +67,6 @@ export default function Subscribe() {
         </div>
       </div>
     </div>
+  
   );
 }
