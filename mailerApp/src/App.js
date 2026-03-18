@@ -6,6 +6,7 @@ import RegisterForm from "./components/RegisterForm";
 import ContactsTable from "./components/ContactsTable";
 import ComposeMails from "./components/ComposeMails";
 import SendMails from "./components/SendMails";
+import Login from "./components/login";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
 
         {/* Pages WITHOUT layout */}
         <Route path="/register" element={<RegisterForm />} />
+        <Route path="/login" element={<Login />} />
 
         {/* Pages WITH layout */}
         <Route element={<Layout />}>
@@ -21,6 +23,7 @@ function App() {
           <Route path="/contacts" element={<ContactsTable />} />
           <Route path="/compose" element={<ComposeMails />} />
           <Route path="/send" element={<SendMails />} />
+          <Route path="/login" element={<Login />} />
         </Route>
 
       </Routes>
